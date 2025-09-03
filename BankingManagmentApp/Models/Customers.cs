@@ -1,13 +1,12 @@
-﻿namespace BankingManagmentApp.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace BankingManagmentApp.Models
 {
-    public class Customers
+    public class Customers:IdentityUser
     {
-        public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Adress { get; set; }
+        public string Address { get; set; }
         public DateOnly DateOfBirth { get; set; }
         public DateTime CreateAt { get; set; } = DateTime.Now;
         public bool IsActive { get; set; }
