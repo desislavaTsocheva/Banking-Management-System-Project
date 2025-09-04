@@ -1,0 +1,48 @@
+﻿@{
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+@section Head {
+<script>
+(function () {
+  var m = document.cookie.match(/(?:^|;\s*)theme=([^;]+)/);
+  var mode = m ? decodeURIComponent(m[1]) : 'system';
+  var actual = mode === 'system'
+      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      : mode;
+  document.documentElement.setAttribute('data-bs-theme', actual);
+  document.documentElement.classList.toggle('dark', actual === 'dark');
+})();
+</script>
+}
+
+<div class="container py-4 settings">
+    <div class="row g-4">
+        <div class="col-12 col-lg-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-header fw-semibold">
+                    Settings
+                </div>
+                <div class="card-body p-3">
+                    <partial name="_ManageNav" />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-9">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Инициализирай Theme JS (wwwroot/js/site.js) -->
+    <script>
+        window.Theme?.initTheme && window.Theme.initTheme();
+    </script>
+
+    @RenderSection("Scripts", required: false)
+}

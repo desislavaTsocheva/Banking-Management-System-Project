@@ -16,7 +16,7 @@ namespace BankingManagmentApp.Services
 
     public interface ICreditScoringService
     {
-        Task<CreditScoreResult> ComputeAsync(string userId);
+        Task<CreditScoreResult?> ComputeAsync(string userId);
     }
 
     public class CreditScoringService : ICreditScoringService
@@ -28,15 +28,24 @@ namespace BankingManagmentApp.Services
             _db = db;
         }
 
-        public async Task<CreditScoreResult> ComputeAsync(string userId)
+        public async Task<CreditScoreResult?> ComputeAsync(string userId)
         {
-            // Loans на потребителя (вече филтрираме по истинското FK поле CustomerId)
+            // Проверка дали изобщо има данни за този user
+            var hasAccounts = await _db.Accounts.AnyAsync(a => a.CustomerId == userId);
+
             var loanIds = await _db.Loans
                 .Where(l => l.CustomerId == userId)
                 .Select(l => l.Id)
                 .ToListAsync();
 
-            // Плащания по тези заеми
+            var hasLoans = loanIds.Any();
+            var hasRepayments = hasLoans &&
+                await _db.LoanRepayments.AnyAsync(r => loanIds.Contains(r.LoanId));
+
+            if (!hasAccounts && !hasLoans && !hasRepayments)
+                return null; // няма реални данни → няма скор
+
+            // --- текущата ти логика за скор-а ---
             var reps = await _db.LoanRepayments
                 .Where(r => loanIds.Contains(r.LoanId))
                 .ToListAsync();
@@ -45,7 +54,6 @@ namespace BankingManagmentApp.Services
             var paid = reps.Count(r => r.Status != null && r.Status.Equals("Paid", StringComparison.OrdinalIgnoreCase));
             var overdue = reps.Count(r => r.Status != null && r.Status.Equals("Overdue", StringComparison.OrdinalIgnoreCase));
 
-            // Сметки/баланси (също по CustomerId)
             var accounts = await _db.Accounts
                 .Where(a => a.CustomerId == userId)
                 .ToListAsync();
@@ -85,5 +93,6 @@ namespace BankingManagmentApp.Services
                 Notes = notes
             };
         }
+
     }
 }

@@ -1,0 +1,57 @@
+﻿@page
+@model DownloadPersonalDataModel
+@{
+    ViewData["Title"] = "Download Your Data";
+    ViewData["ActivePage"] = ManageNavPages.PersonalData;
+}
+
+<h4 class="mb-4">Personal data export</h4>
+
+<div class="row g-4">
+    <div class="col-12 col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <p class="text-muted mb-3">
+                    You can export a copy of your personal data in JSON format. This may include your profile
+                    details (name, address, phone), account identity fields, external login keys, and your authenticator
+                    key (if configured).
+                </p>
+
+                <ul class="small text-muted mb-4">
+                    <li>Format: <code>application/json</code></li>
+                    <li>Use this file carefully — it can contain sensitive information.</li>
+                </ul>
+
+                <form method="post" id="download-form" class="d-flex align-items-center gap-3">
+                    <button id="download-btn" type="submit" class="btn btn-primary">
+                        <span class="me-1" aria-hidden="true">⬇️</span> Generate JSON export
+                    </button>
+                    <a asp-page="./PersonalData" class="btn btn-link">Back to Personal data</a>
+                </form>
+
+                <div id="download-hint" class="small text-muted mt-3 d-none">
+                    Preparing your export… The download will start shortly.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            const form = document.getElementById('download-form');
+            const btn = document.getElementById('download-btn');
+            const hint = document.getElementById('download-hint');
+            if (!form || !btn) return;
+
+            form.addEventListener('submit', function () {
+                btn.setAttribute('disabled', 'disabled');
+                btn.classList.add('disabled');
+                if (hint) hint.classList.remove('d-none');
+                // allow normal POST to proceed (no preventDefault)
+            });
+        })();
+    </script>
+    <partial name="_ValidationScriptsPartial" />
+}

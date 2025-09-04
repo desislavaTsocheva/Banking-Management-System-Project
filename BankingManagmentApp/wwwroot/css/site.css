@@ -77,3 +77,102 @@ body {
   background: linear-gradient(180deg, #2f158d 0%, #6a50ca 100%); 
   border-color: #0a145f;
 }
+
+/* Settings polish */
+.settings .card { border-radius: 1rem; }
+.settings .nav-pills .nav-link { border-radius: .75rem; }
+.settings .nav-pills .nav-link.active { color: #fff; }
+
+
+/* Fallback ако не ползваш Bootstrap 5.3 */
+.dark body { background-color: #121212; color: #e9ecef; }
+.dark .card { background-color: #1e1e1e; color: #e9ecef; }
+.dark .btn-primary { background-color: #3b82f6; border-color: #3b82f6; }
+
+
+/* ===== Dark theme polishing (Bootstrap 5.3 with data-bs-theme) ===== */
+/* Основни цветове за тъмна тема */
+[data-bs-theme="dark"] {
+  --bs-body-bg: #121212;
+  --bs-body-color: #e9ecef;
+  --bs-border-color: #2b2f32;
+
+  /* По-приятни линкове в тъмно */
+  --bs-link-color: #8ab4f8;
+  --bs-link-hover-color: #a8c7fa;
+
+  /* Карти, навбар, дропдауни */
+  --bs-card-bg: #1b1f22;
+  --bs-card-border-color: #2b2f32;
+  --bs-dropdown-bg: #1b1f22;
+  --bs-dropdown-link-color: var(--bs-body-color);
+  --bs-dropdown-link-hover-bg: #23272a;
+}
+
+/* Ако някъде е останало text-dark/bg-white – направи ги видими в dark */
+[data-bs-theme="dark"] .text-dark {
+  color: var(--bs-body-color) !important;
+}
+[data-bs-theme="dark"] .bg-white {
+  background-color: var(--bs-card-bg) !important;
+}
+
+/* Формови полета да изглеждат четимо в тъмно */
+[data-bs-theme="dark"] .form-control,
+[data-bs-theme="dark"] .form-select,
+[data-bs-theme="dark"] .input-group-text {
+  background-color: #1e1f22;
+  color: var(--bs-body-color);
+  border-color: #2b2f32;
+}
+[data-bs-theme="dark"] .form-control:focus,
+[data-bs-theme="dark"] .form-select:focus {
+  background-color: #202327;
+  color: var(--bs-body-color);
+  border-color: #3a3f44;
+  box-shadow: 0 0 0 .25rem rgba(138,180,248,.15);
+}
+
+/* Таблици */
+[data-bs-theme="dark"] .table {
+  color: var(--bs-body-color);
+}
+[data-bs-theme="dark"] .table-striped > tbody > tr:nth-of-type(odd) {
+  --bs-table-bg-type: #16181a;
+}
+
+/* Навигация */
+[data-bs-theme="dark"] .navbar,
+[data-bs-theme="dark"] .dropdown-menu {
+  background-color: var(--bs-body-bg);
+}
+
+/* Карти */
+[data-bs-theme="dark"] .card {
+  background-color: var(--bs-card-bg);
+  border-color: var(--bs-card-border-color);
+}
+
+/* ===== Accent chip/pill ===== */
+:root{
+  --chip-accent-bg: #0b5ed7;  
+  --chip-accent-fg: #ffffff;   
+  --chip-accent-border: #0a58ca;
+}
+[data-bs-theme="dark"]{
+  --chip-accent-bg: #0a58ca;   
+  --chip-accent-border: #084298;
+}
+
+.stat-badge.chip-accent{
+  background: var(--chip-accent-bg) !important;
+  color: var(--chip-accent-fg) !important;
+  border-color: var(--chip-accent-border) !important;
+}
+
+/* За Bootstrap badges, ако и тях искаш да са в акцент */
+.badge.chip-accent{
+  background-color: var(--chip-accent-bg) !important;
+  color: var(--chip-accent-fg) !important;
+  border: 1px solid var(--chip-accent-border) !important;
+}
