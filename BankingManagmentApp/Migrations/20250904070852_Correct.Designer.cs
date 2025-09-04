@@ -4,6 +4,7 @@ using BankingManagmentApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankingManagmentApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250904070852_Correct")]
+    partial class Correct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,6 +80,9 @@ namespace BankingManagmentApp.Migrations
                     b.Property<int>("LoanId")
                         .HasColumnType("int");
 
+                    b.Property<int>("LoansId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Notes")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -86,7 +92,7 @@ namespace BankingManagmentApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LoanId");
+                    b.HasIndex("LoansId");
 
                     b.ToTable("CreditAssessments");
                 });
@@ -111,7 +117,10 @@ namespace BankingManagmentApp.Migrations
                     b.Property<int>("LoanId")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly?>("PaymentDate")
+                    b.Property<int>("LoansId")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("PaymentDate")
                         .HasColumnType("date");
 
                     b.Property<string>("Status")
@@ -120,7 +129,7 @@ namespace BankingManagmentApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LoanId");
+                    b.HasIndex("LoansId");
 
                     b.ToTable("LoanRepayments");
                 });
@@ -454,24 +463,24 @@ namespace BankingManagmentApp.Migrations
 
             modelBuilder.Entity("BankingManagmentApp.Models.CreditAssessments", b =>
                 {
-                    b.HasOne("BankingManagmentApp.Models.Loans", "Loan")
+                    b.HasOne("BankingManagmentApp.Models.Loans", "Loans")
                         .WithMany("CreditAssessments")
-                        .HasForeignKey("LoanId")
+                        .HasForeignKey("LoansId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Loan");
+                    b.Navigation("Loans");
                 });
 
             modelBuilder.Entity("BankingManagmentApp.Models.LoanRepayments", b =>
                 {
-                    b.HasOne("BankingManagmentApp.Models.Loans", "Loan")
+                    b.HasOne("BankingManagmentApp.Models.Loans", "Loans")
                         .WithMany("LoanRepayments")
-                        .HasForeignKey("LoanId")
+                        .HasForeignKey("LoansId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Loan");
+                    b.Navigation("Loans");
                 });
 
             modelBuilder.Entity("BankingManagmentApp.Models.Loans", b =>
