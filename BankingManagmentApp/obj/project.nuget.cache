@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "L9km8JT5z1M=",
+  "dgSpecHash": "CIph8on3Hws=",
   "success": true,
   "projectFilePath": "C:\\Users\\viole\\OneDrive\\Работен плот\\Banking-Management-System-Project\\BankingManagmentApp\\BankingManagmentApp.csproj",
   "expectedPackageFiles": [
@@ -136,6 +136,7 @@
     "C:\\Users\\viole\\.nuget\\packages\\nuget.projectmodel\\6.11.0\\nuget.projectmodel.6.11.0.nupkg.sha512",
     "C:\\Users\\viole\\.nuget\\packages\\nuget.protocol\\6.11.0\\nuget.protocol.6.11.0.nupkg.sha512",
     "C:\\Users\\viole\\.nuget\\packages\\nuget.versioning\\6.11.0\\nuget.versioning.6.11.0.nupkg.sha512",
+    "C:\\Users\\viole\\.nuget\\packages\\qrcoder\\1.4.3\\qrcoder.1.4.3.nupkg.sha512",
     "C:\\Users\\viole\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.1.6\\sqlitepclraw.bundle_e_sqlite3.2.1.6.nupkg.sha512",
     "C:\\Users\\viole\\.nuget\\packages\\sqlitepclraw.core\\2.1.6\\sqlitepclraw.core.2.1.6.nupkg.sha512",
     "C:\\Users\\viole\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.1.6\\sqlitepclraw.lib.e_sqlite3.2.1.6.nupkg.sha512",

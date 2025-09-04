@@ -1,5 +1,6 @@
 wwwroot\css\site.css
 wwwroot\favicon.ico
+wwwroot\js\qr.js
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
@@ -46,6 +47,16 @@ wwwroot\lib\bootstrap\dist\js\bootstrap.js.map
 wwwroot\lib\bootstrap\dist\js\bootstrap.min.js
 wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map
 wwwroot\lib\bootstrap\LICENSE
+wwwroot\lib\davidshimjs-qrcodejs-04f46c6\.gitignore
+wwwroot\lib\davidshimjs-qrcodejs-04f46c6\bower.json
+wwwroot\lib\davidshimjs-qrcodejs-04f46c6\index-svg.html
+wwwroot\lib\davidshimjs-qrcodejs-04f46c6\index.html
+wwwroot\lib\davidshimjs-qrcodejs-04f46c6\index.svg
+wwwroot\lib\davidshimjs-qrcodejs-04f46c6\jquery.min.js
+wwwroot\lib\davidshimjs-qrcodejs-04f46c6\LICENSE
+wwwroot\lib\davidshimjs-qrcodejs-04f46c6\qrcode.js
+wwwroot\lib\davidshimjs-qrcodejs-04f46c6\qrcode.min.js
+wwwroot\lib\davidshimjs-qrcodejs-04f46c6\README.md
 wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js
 wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js
 wwwroot\lib\jquery-validation-unobtrusive\LICENSE.txt

@@ -591,3 +591,4 @@ C:\Users\viole\OneDrive\Работен плот\Banking-Management-System-Projec
 C:\Users\viole\OneDrive\Работен плот\Banking-Management-System-Project\BankingManagmentApp\obj\Debug\net8.0\BankingM.D3591C8A.Up2Date
 C:\Users\viole\OneDrive\Работен плот\Banking-Management-System-Project\BankingManagmentApp\obj\Debug\net8.0\BankingManagmentApp.genruntimeconfig.cache
 C:\Users\viole\OneDrive\Работен плот\Banking-Management-System-Project\BankingManagmentApp\obj\Debug\net8.0\ref\BankingManagmentApp.dll
+C:\Users\viole\OneDrive\Работен плот\Banking-Management-System-Project\BankingManagmentApp\bin\Debug\net8.0\QRCoder.dll
