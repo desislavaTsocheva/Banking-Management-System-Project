@@ -1,6 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
+﻿#nullable disable
 
 using System;
 using System.Collections.Generic;
@@ -75,6 +73,10 @@ namespace BankingManagmentApp.Areas.Identity.Pages.Account
             [Required]
             [Display(Name = "PhoneNumber")]
             public string PhoneNumber { get; set; }
+           
+            [Required]
+            [Display(Name = "DateOfBirth")]
+            public DateOnly DateOfBirth { get; set; }
 
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
@@ -101,7 +103,7 @@ namespace BankingManagmentApp.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                
+
                 var user = new Customers
                 {
                     UserName = Input.Email,
@@ -110,7 +112,9 @@ namespace BankingManagmentApp.Areas.Identity.Pages.Account
                     LastName = Input.LastName,
                     Address = Input.Address,
                     PhoneNumber = Input.PhoneNumber,
-                    CreateAt = DateTime.Now 
+                    CreateAt = DateTime.Now,
+                    DateOfBirth = Input.DateOfBirth,
+                    IsActive =true 
                 };
 
                 
@@ -151,14 +155,5 @@ namespace BankingManagmentApp.Areas.Identity.Pages.Account
 
             return Page();
         }
-
-        //private IUserEmailStore<Customers> GetEmailStore()
-        //{
-        //    if (!_userManager.SupportsUserEmail)
-        //    {
-        //        throw new NotSupportedException("The default UI requires a user store with email support.");
-        //    }
-        //    return (IUserEmailStore<Customers>)_userStore;
-        //}
     }
 }

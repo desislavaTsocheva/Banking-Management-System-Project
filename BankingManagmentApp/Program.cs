@@ -3,6 +3,7 @@ using BankingManagmentApp.Data;
 using BankingManagmentApp.Models;
 using BankingManagmentApp.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,14 +19,16 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 // Identity
 builder.Services.AddDefaultIdentity<Customers>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = false;
+    options.SignIn.RequireConfirmedAccount = true;
+    options.SignIn.RequireConfirmedEmail = true;
+    //options.SignIn.RequireConfirmedPhoneNumber = true;
     options.User.RequireUniqueEmail = true;
     options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
 })
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
-
+builder.Services.AddSession();
 // MVC
 builder.Services.AddControllersWithViews();
 
@@ -40,8 +43,6 @@ builder.Services.AddSession(options =>
 
 // DI
 builder.Services.AddScoped<ICreditScoringService, CreditScoringService>();
-// Ако EmailSender.cs го има и искаш да пращаш имейли, махни коментара на реда долу:
-// builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 var app = builder.Build();
 

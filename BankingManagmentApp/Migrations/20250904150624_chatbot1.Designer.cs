@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankingManagmentApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250904070852_Correct")]
-    partial class Correct
+    [Migration("20250904150624_chatbot1")]
+    partial class chatbot1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,9 +80,6 @@ namespace BankingManagmentApp.Migrations
                     b.Property<int>("LoanId")
                         .HasColumnType("int");
 
-                    b.Property<int>("LoansId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Notes")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -92,7 +89,7 @@ namespace BankingManagmentApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LoansId");
+                    b.HasIndex("LoanId");
 
                     b.ToTable("CreditAssessments");
                 });
@@ -117,10 +114,7 @@ namespace BankingManagmentApp.Migrations
                     b.Property<int>("LoanId")
                         .HasColumnType("int");
 
-                    b.Property<int>("LoansId")
-                        .HasColumnType("int");
-
-                    b.Property<DateOnly>("PaymentDate")
+                    b.Property<DateOnly?>("PaymentDate")
                         .HasColumnType("date");
 
                     b.Property<string>("Status")
@@ -129,7 +123,7 @@ namespace BankingManagmentApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LoansId");
+                    b.HasIndex("LoanId");
 
                     b.ToTable("LoanRepayments");
                 });
@@ -209,6 +203,39 @@ namespace BankingManagmentApp.Migrations
                     b.HasIndex("AccountsId");
 
                     b.ToTable("Transactions");
+                });
+
+            modelBuilder.Entity("ChatHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CustmersId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("ChatHistory");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -422,6 +449,31 @@ namespace BankingManagmentApp.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("TemplateAnswer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AnswerText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FunctionName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Keyword")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TemplateAnswer");
+                });
+
             modelBuilder.Entity("BankingManagmentApp.Models.Customers", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
@@ -463,24 +515,24 @@ namespace BankingManagmentApp.Migrations
 
             modelBuilder.Entity("BankingManagmentApp.Models.CreditAssessments", b =>
                 {
-                    b.HasOne("BankingManagmentApp.Models.Loans", "Loans")
+                    b.HasOne("BankingManagmentApp.Models.Loans", "Loan")
                         .WithMany("CreditAssessments")
-                        .HasForeignKey("LoansId")
+                        .HasForeignKey("LoanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Loans");
+                    b.Navigation("Loan");
                 });
 
             modelBuilder.Entity("BankingManagmentApp.Models.LoanRepayments", b =>
                 {
-                    b.HasOne("BankingManagmentApp.Models.Loans", "Loans")
+                    b.HasOne("BankingManagmentApp.Models.Loans", "Loan")
                         .WithMany("LoanRepayments")
-                        .HasForeignKey("LoansId")
+                        .HasForeignKey("LoanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Loans");
+                    b.Navigation("Loan");
                 });
 
             modelBuilder.Entity("BankingManagmentApp.Models.Loans", b =>
@@ -503,6 +555,15 @@ namespace BankingManagmentApp.Migrations
                         .IsRequired();
 
                     b.Navigation("Accounts");
+                });
+
+            modelBuilder.Entity("ChatHistory", b =>
+                {
+                    b.HasOne("BankingManagmentApp.Models.Customers", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId");
+
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

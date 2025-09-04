@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankingManagmentApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250903091349_initial2")]
-    partial class initial2
+    [Migration("20250904150435_chatbot")]
+    partial class chatbot
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,10 +47,8 @@ namespace BankingManagmentApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CustomerId1")
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("IBAN")
@@ -63,7 +61,7 @@ namespace BankingManagmentApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId1");
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("Accounts");
                 });
@@ -82,9 +80,6 @@ namespace BankingManagmentApp.Migrations
                     b.Property<int>("LoanId")
                         .HasColumnType("int");
 
-                    b.Property<int>("LoansId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Notes")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -94,7 +89,7 @@ namespace BankingManagmentApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LoansId");
+                    b.HasIndex("LoanId");
 
                     b.ToTable("CreditAssessments");
                 });
@@ -119,10 +114,7 @@ namespace BankingManagmentApp.Migrations
                     b.Property<int>("LoanId")
                         .HasColumnType("int");
 
-                    b.Property<int>("LoansId")
-                        .HasColumnType("int");
-
-                    b.Property<DateOnly>("PaymentDate")
+                    b.Property<DateOnly?>("PaymentDate")
                         .HasColumnType("date");
 
                     b.Property<string>("Status")
@@ -131,7 +123,7 @@ namespace BankingManagmentApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LoansId");
+                    b.HasIndex("LoanId");
 
                     b.ToTable("LoanRepayments");
                 });
@@ -153,10 +145,8 @@ namespace BankingManagmentApp.Migrations
                     b.Property<decimal>("ApprovedAmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CustomerId1")
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Date")
@@ -175,7 +165,7 @@ namespace BankingManagmentApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId1");
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("Loans");
                 });
@@ -213,6 +203,40 @@ namespace BankingManagmentApp.Migrations
                     b.HasIndex("AccountsId");
 
                     b.ToTable("Transactions");
+                });
+
+            modelBuilder.Entity("ChatHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CustmersId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomersId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomersId");
+
+                    b.ToTable("ChatHistory");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -426,6 +450,31 @@ namespace BankingManagmentApp.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("TemplateAnswer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AnswerText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FunctionName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Keyword")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TemplateAnswer");
+                });
+
             modelBuilder.Entity("BankingManagmentApp.Models.Customers", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
@@ -458,38 +507,42 @@ namespace BankingManagmentApp.Migrations
                 {
                     b.HasOne("BankingManagmentApp.Models.Customers", "Customer")
                         .WithMany("Accounts")
-                        .HasForeignKey("CustomerId1");
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("BankingManagmentApp.Models.CreditAssessments", b =>
                 {
-                    b.HasOne("BankingManagmentApp.Models.Loans", "Loans")
-                        .WithMany()
-                        .HasForeignKey("LoansId")
+                    b.HasOne("BankingManagmentApp.Models.Loans", "Loan")
+                        .WithMany("CreditAssessments")
+                        .HasForeignKey("LoanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Loans");
+                    b.Navigation("Loan");
                 });
 
             modelBuilder.Entity("BankingManagmentApp.Models.LoanRepayments", b =>
                 {
-                    b.HasOne("BankingManagmentApp.Models.Loans", "Loans")
+                    b.HasOne("BankingManagmentApp.Models.Loans", "Loan")
                         .WithMany("LoanRepayments")
-                        .HasForeignKey("LoansId")
+                        .HasForeignKey("LoanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Loans");
+                    b.Navigation("Loan");
                 });
 
             modelBuilder.Entity("BankingManagmentApp.Models.Loans", b =>
                 {
                     b.HasOne("BankingManagmentApp.Models.Customers", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId1");
+                        .WithMany("Loans")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Customer");
                 });
@@ -503,6 +556,17 @@ namespace BankingManagmentApp.Migrations
                         .IsRequired();
 
                     b.Navigation("Accounts");
+                });
+
+            modelBuilder.Entity("ChatHistory", b =>
+                {
+                    b.HasOne("BankingManagmentApp.Models.Customers", "Customers")
+                        .WithMany()
+                        .HasForeignKey("CustomersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -563,12 +627,16 @@ namespace BankingManagmentApp.Migrations
 
             modelBuilder.Entity("BankingManagmentApp.Models.Loans", b =>
                 {
+                    b.Navigation("CreditAssessments");
+
                     b.Navigation("LoanRepayments");
                 });
 
             modelBuilder.Entity("BankingManagmentApp.Models.Customers", b =>
                 {
                     b.Navigation("Accounts");
+
+                    b.Navigation("Loans");
                 });
 #pragma warning restore 612, 618
         }

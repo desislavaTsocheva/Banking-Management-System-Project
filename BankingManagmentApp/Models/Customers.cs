@@ -2,7 +2,8 @@
 
 namespace BankingManagmentApp.Models
 {
-    public class Customers : IdentityUser
+    public class Customers :IdentityUser 
+
     {
         public string FirstName { get; set; } = string.Empty; 
         public string LastName { get; set; } = string.Empty; 

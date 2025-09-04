@@ -1,6 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
+﻿#nullable disable
 
 using System;
 using System.Collections.Generic;
@@ -14,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using BankingManagmentApp.Models;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
 namespace BankingManagmentApp.Areas.Identity.Pages.Account
 {
@@ -50,6 +49,10 @@ namespace BankingManagmentApp.Areas.Identity.Pages.Account
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
+            [Required]
+            [Display(Name = "CAPTCHA")]
+            public string CaptchaInput { get; set; }
+
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
         }
@@ -78,6 +81,15 @@ namespace BankingManagmentApp.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+
+                var captchaSession = HttpContext.Session.GetString("Captcha");
+
+                if (string.IsNullOrEmpty(captchaSession) || captchaSession != Input.CaptchaInput)
+                {
+                    ModelState.AddModelError(string.Empty, "CAPTCHA е неправилна.");
+                    return Page();
+                }
+
                 var user = await _userManager.FindByEmailAsync(Input.Email);
 
                 if (user != null)
