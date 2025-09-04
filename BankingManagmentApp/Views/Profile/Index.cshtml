@@ -73,7 +73,7 @@
                         {
                             foreach (var t in totals)
                             {
-                                <span class="stat-badge">@t.Currency&nbsp;@t.Sum.ToString("N2", bg)</span>
+                                <span class="stat-badge chip-accent">@t.Currency&nbsp;@t.Sum.ToString("N2", bg)</span>
                             }
                         }
                         else
@@ -118,7 +118,7 @@
                                             Opened: @a.CreateAt.ToString("dd.MM.yyyy")
                                         </div>
                                     </div>
-                                    <span class="badge rounded-pill bg-light text-dark border">
+                                    <span class="badge rounded-pill chip-accent">
                                         @a.AccountType
                                     </span>
                                 </div>
