@@ -1,0 +1,95 @@
+﻿@page
+@model EmailModel
+@{
+    ViewData["Title"] = "Manage Email";
+    ViewData["ActivePage"] = ManageNavPages.Email;
+}
+
+<h4 class="mb-4">Email</h4>
+<partial name="_StatusMessage" for="StatusMessage" />
+
+<div class="row g-4">
+    <!-- Current email & verification -->
+    <div class="col-12 col-lg-7">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">Current email</h5>
+                    @if (Model.IsEmailConfirmed)
+                    {
+                        <span class="badge bg-success">Verified</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning text-dark">Unverified</span>
+                    }
+                </div>
+
+                <hr />
+
+                <div class="input-group mb-2">
+                    <span class="input-group-text">&#64;</span> @* at-sign *@
+                    <input asp-for="Email" class="form-control" placeholder="Email" disabled />
+                    @if (Model.IsEmailConfirmed)
+                    {
+                        <span class="input-group-text text-success">✓</span>
+                    }
+                </div>
+
+                @if (!Model.IsEmailConfirmed)
+                {
+                    <form method="post" class="mt-2 d-inline">
+                        <button id="email-verification"
+                                type="submit"
+                                asp-page-handler="SendVerificationEmail"
+                                class="btn btn-outline-primary">
+                            Send verification email
+                        </button>
+                    </form>
+                    <p class="small text-muted mt-2 mb-0">
+                        We’ll send a verification link to your current email address.
+                    </p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Change email -->
+    <div class="col-12 col-lg-7">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h5 class="mb-3">Change email</h5>
+
+                <form id="email-form" method="post" novalidate>
+                    <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.NewEmail"
+                               class="form-control"
+                               autocomplete="email"
+                               aria-required="true"
+                               placeholder="name@example.com" />
+                        <label asp-for="Input.NewEmail" class="form-label"></label>
+                        <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
+                    </div>
+
+                    <button id="change-email-button"
+                            type="submit"
+                            asp-page-handler="ChangeEmail"
+                            class="btn btn-primary">
+                        Send change confirmation
+                    </button>
+
+                    <p class="small text-muted mt-2 mb-0">
+                        A confirmation link will be sent to the new address.
+                        Your email changes only after you confirm.
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

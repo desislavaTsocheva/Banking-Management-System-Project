@@ -1,0 +1,100 @@
+﻿@page
+@model DeletePersonalDataModel
+@{
+    ViewData["Title"] = "Delete Personal Data";
+    ViewData["ActivePage"] = ManageNavPages.PersonalData;
+}
+
+<h4 class="mb-4 text-danger">Delete account & personal data</h4>
+
+<div class="row g-4">
+    <div class="col-12 col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <div class="alert alert-warning" role="alert">
+                    <strong>This is permanent.</strong> Deleting your data will:
+                    <ul class="mb-0 mt-2">
+                        <li>Remove your account and all personal information.</li>
+                        <li>Sign you out from all devices.</li>
+                        <li>Disable access to any associated services.</li>
+                    </ul>
+                </div>
+
+                <form id="delete-user" method="post" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+                    @if (Model.RequirePassword)
+                    {
+                        <div class="form-floating mb-3 position-relative">
+                            <input asp-for="Input.Password"
+                                   class="form-control"
+                                   autocomplete="current-password"
+                                   aria-required="true"
+                                   placeholder="Enter your password"
+                                   id="passwordField" />
+                            <label asp-for="Input.Password" class="form-label"></label>
+                            <button type="button"
+                                    id="togglePassword"
+                                    class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0 mt-2 me-2">
+                                Show
+                            </button>
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+                    }
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" value="" id="confirmDelete">
+                        <label class="form-check-label" for="confirmDelete">
+                            I understand this action cannot be undone.
+                        </label>
+                    </div>
+
+                    <div class="d-flex gap-3">
+                        <button id="deleteBtn" class="btn btn-danger" type="submit" disabled>
+                            Delete data and close my account
+                        </button>
+                        <a asp-page="./PersonalData" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+
+                <p class="small text-muted mt-3 mb-0">
+                    Tip: You can <a asp-page="./DownloadPersonalData">download your data</a> before deleting your account.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            const checkbox = document.getElementById('confirmDelete');
+            const deleteBtn = document.getElementById('deleteBtn');
+            const toggleBtn = document.getElementById('togglePassword');
+            const pwd = document.getElementById('passwordField');
+
+            if (checkbox && deleteBtn) {
+                checkbox.addEventListener('change', function () {
+                    deleteBtn.disabled = !this.checked;
+                });
+            }
+
+            if (toggleBtn && pwd) {
+                toggleBtn.addEventListener('click', function () {
+                    const isPassword = pwd.getAttribute('type') === 'password';
+                    pwd.setAttribute('type', isPassword ? 'text' : 'password');
+                    toggleBtn.textContent = isPassword ? 'Hide' : 'Show';
+                });
+            }
+
+            const form = document.getElementById('delete-user');
+            if (form && deleteBtn) {
+                form.addEventListener('submit', function () {
+                    deleteBtn.setAttribute('disabled', 'disabled');
+                    deleteBtn.classList.add('disabled');
+                });
+            }
+        })();
+    </script>
+    <partial name="_ValidationScriptsPartial" />
+}

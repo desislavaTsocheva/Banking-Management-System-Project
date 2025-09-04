@@ -1,0 +1,76 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Profile";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+<h4 class="mb-3">Profile</h4>
+<partial name="_StatusMessage" for="StatusMessage" />
+
+<form id="profile-form" method="post" class="row g-3">
+    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+    <div class="col-12 col-md-6">
+        <div class="form-floating">
+            <input asp-for="Username" class="form-control" placeholder="Username" readonly />
+            <label asp-for="Username" class="form-label"></label>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6">
+        <div class="form-floating">
+            <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Phone number"
+                   type="tel" inputmode="tel" autocomplete="tel" />
+            <label asp-for="Input.PhoneNumber" class="form-label"></label>
+            <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6">
+        <div class="form-floating">
+            <input asp-for="Input.FirstName" class="form-control" placeholder="First name"
+                   autocomplete="given-name" />
+            <label asp-for="Input.FirstName" class="form-label"></label>
+            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6">
+        <div class="form-floating">
+            <input asp-for="Input.LastName" class="form-control" placeholder="Last name"
+                   autocomplete="family-name" />
+            <label asp-for="Input.LastName" class="form-label"></label>
+            <span asp-validation-for="Input.LastName" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="form-floating">
+            <input asp-for="Input.Address" class="form-control" placeholder="Address"
+                   autocomplete="street-address" />
+            <label asp-for="Input.Address" class="form-label"></label>
+            <span asp-validation-for="Input.Address" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6">
+        <div class="form-floating">
+            <input asp-for="Input.DateOfBirth" class="form-control" type="date"
+                   asp-format="{0:yyyy-MM-dd}" placeholder="Date of birth"
+                   autocomplete="bday" />
+            <label asp-for="Input.DateOfBirth" class="form-label"></label>
+            <span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <button id="update-profile-button" type="submit" class="btn btn-primary">
+            Save changes
+        </button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
