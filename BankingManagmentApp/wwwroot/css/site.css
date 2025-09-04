@@ -20,3 +20,60 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* --- Profile page --- */
+.container-profile { max-width: 1100px; margin: 0 auto; }
+
+.profile-header { border-left: 4px solid #1b6ec2; }
+.avatar-circle {
+  width: 64px; height: 64px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #1b6ec2, #258cfb);
+  color: #fff; font-weight: 700; font-size: 20px;
+}
+.stat-badge {
+  display: inline-block; padding: .25rem .5rem; border: 1px solid #e6e6e6;
+  border-radius: 999px; background: #f8f9fa; font-size: .8rem;
+}
+
+.account-card {
+  border: 1px solid #e9ecef; border-radius: 10px; padding: 14px;
+  transition: box-shadow .15s ease, transform .15s ease;
+  background: #fff;
+}
+.account-card:hover { box-shadow: 0 .5rem 1rem rgba(0,0,0,.08); transform: translateY(-1px); }
+
+.iban { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; letter-spacing: .5px; }
+.balance .amount { font-size: 1.4rem; font-weight: 700; line-height: 1.1; }
+.balance .currency { font-size: .9rem; color: #6c757d; }
+
+.status-pill {
+  border: 1px solid transparent; border-radius: 999px; padding: .15rem .6rem;
+  font-size: .8rem;
+}
+.status-pill.ok { background: #e9f7ef; color: #1e7e34; border-color: #cfe9d8; }
+.status-pill.warn { background: #fff4e5; color: #b35c00; border-color: #ffe0b2; }
+
+.amount-positive { color: #5cbe7d; font-weight: 600; }
+.amount-negative { color: #974444; font-weight: 600; }
+
+.xsmall { font-size: .75rem; }
+
+.table thead th { font-weight: 600; }
+.badge { font-weight: 500; letter-spacing: .2px; }
+
+.container-profile .card { border-radius: .5rem; }
+.container-profile .card .table { width: 100%; }
+
+@media (min-width: 992px) {
+  .container-profile .card + .card { margin-top: .85rem; }
+}
+
+.container-profile .row.g-3.mt-2 { margin-top: .75rem !important; }
+
+
+/* gradient colors */
+.account-card {
+  background: linear-gradient(180deg, #2f158d 0%, #6a50ca 100%); 
+  border-color: #0a145f;
+}

@@ -1,0 +1,329 @@
+@using System.Globalization
+@using BankingManagmentApp.Utilities
+@model BankingManagmentApp.ViewModels.ProfileVm
+
+@{
+    ViewData["Title"] = "My Profile";
+    var bg = CultureInfo.GetCultureInfo("bg-BG");
+
+    string Initials(string first, string last)
+    {
+        var f = string.IsNullOrWhiteSpace(first) ? "" : first.Trim()[0].ToString().ToUpper();
+        var l = string.IsNullOrWhiteSpace(last)  ? "" : last.Trim()[0].ToString().ToUpper();
+        return (f + l);
+    }
+}
+
+@functions {
+    string RiskLabel(int lvl) => lvl switch
+    {
+        1 => "Low",
+        2 => "Medium",
+        3 => "High",
+        _ => "Very high"
+    };
+
+    string RiskBadgeClass(int lvl) => lvl switch
+    {
+        1 => "bg-success",
+        2 => "bg-warning text-dark",
+        3 => "bg-danger",
+        _ => "bg-dark"
+    };
+}
+
+<div class="container-profile">
+
+    <!-- HEADER: avatar + identity + totals -->
+    <div class="card shadow-sm mb-3 profile-header">
+        <div class="card-body d-flex align-items-center flex-wrap gap-3">
+            <div class="avatar-circle">
+                <span>@Initials(Model.User.FirstName, Model.User.LastName)</span>
+            </div>
+
+            <div class="flex-grow-1 min-w-0">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    <div class="min-w-0">
+                        <h5 class="mb-1 text-truncate">@Model.User.FirstName @Model.User.LastName</h5>
+                        <div class="text-muted small">
+                            <span class="me-3">@Model.User.Email</span>
+                            <span class="me-3">@Model.User.PhoneNumber</span>
+                            <span>@Model.User.Address</span>
+                        </div>
+                        <div class="text-muted xsmall mt-1">
+                            Created on: @Model.User.CreateAt.ToString("dd.MM.yyyy HH:mm")
+                        </div>
+                    </div>
+                    <div class="text-nowrap">
+                        <a class="btn btn-outline-primary btn-sm" asp-area="Identity" asp-page="/Account/Manage/Index">
+                            Manage security
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mt-3 d-flex flex-wrap gap-2">
+                    @{
+                        var totals = Model.Accounts
+                            .GroupBy(a => a.Currency)
+                            .Select(g => new { Currency = g.Key, Sum = g.Sum(x => x.Balance) })
+                            .OrderBy(x => x.Currency)
+                            .ToList();
+
+                        if (totals.Any())
+                        {
+                            foreach (var t in totals)
+                            {
+                                <span class="stat-badge">@t.Currency&nbsp;@t.Sum.ToString("N2", bg)</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="text-muted small">No accounts yet.</span>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACCOUNTS: responsive cards -->
+    <div class="card shadow-sm mb-3">
+        <div class="card-header d-flex align-items-center justify-content-between">
+            <strong>Accounts</strong>
+            <span class="text-muted small">@Model.Accounts.Count account(s)</span>
+        </div>
+
+        <div class="card-body p-3">
+            @if (!Model.Accounts.Any())
+            {
+                <div class="text-muted">You have no accounts.</div>
+            }
+            else
+            {
+                <div class="row g-3">
+                    @foreach (var a in Model.Accounts)
+                    {
+                        <div class="col-12 col-md-6">
+                            <div class="account-card h-100">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <div class="iban d-flex align-items-center gap-2">
+                                            <span>@a.IBAN.MaskIban()</span>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                    data-copy-iban="@a.IBAN">
+                                                Copy IBAN
+                                            </button>
+                                        </div>
+                                        <div class="text-muted xsmall">
+                                            Opened: @a.CreateAt.ToString("dd.MM.yyyy")
+                                        </div>
+                                    </div>
+                                    <span class="badge rounded-pill bg-light text-dark border">
+                                        @a.AccountType
+                                    </span>
+                                </div>
+
+                                <div class="balance mt-2">
+                                    <div class="amount">@a.Balance.ToString("N2", bg)</div>
+                                    <div class="currency">@a.Currency</div>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <span class="status-pill @(a.Status?.ToLower() == "active" ? "ok" : "warn")">
+                                        @a.Status
+                                    </span>
+
+                                    <a class="btn btn-sm btn-outline-secondary"
+                                        asp-controller="Profile" asp-action="ExportAccounts"
+                                        asp-route-accountId="@a.Id">
+                                            Export CSV
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div> 
+    </div>
+
+    <!-- TRANSACTIONS -->
+    <div class="card shadow-sm mb-3 mt-2 mt-lg-4">
+        <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <strong>Recent transactions</strong>
+            @if (Model.Accounts.Any())
+            {
+                <form class="d-flex align-items-end gap-2" method="get" asp-controller="Profile" asp-action="ExportTransactions">
+                    <div>
+                        <label class="form-label xsmall mb-1">Account</label>
+                        <select name="accountId" class="form-select form-select-sm">
+                            @foreach (var a in Model.Accounts)
+                            {
+                                <option value="@a.Id">@a.IBAN.MaskIban() (@a.Currency)</option>
+                            }
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label xsmall mb-1">From</label>
+                        <input type="date" name="from" class="form-control form-control-sm" />
+                    </div>
+                    <div>
+                        <label class="form-label xsmall mb-1">To</label>
+                        <input type="date" name="to" class="form-control form-control-sm" />
+                    </div>
+                    <button type="submit" class="btn btn-sm btn-outline-secondary">Export CSV</button>
+                </form>
+            }
+        </div>
+        <div class="card-body p-0">
+            @if (!Model.LastTransactions.Any())
+            {
+                <div class="p-3 text-muted">You have no transactions.</div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 110px;">Date</th>
+                                <th style="width: 110px;">Type</th>
+                                <th class="text-end" style="width: 160px;">Amount</th>
+                                <th>Description</th>
+                                <th style="width: 110px;">Ref.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var t in Model.LastTransactions)
+                            {
+                                var isDebit = string.Equals(t.TransactionType, "Debit", StringComparison.OrdinalIgnoreCase);
+                                <tr>
+                                    <td>@t.Date.ToString("dd.MM.yyyy")</td>
+                                    <td>
+                                        <span class="badge @(isDebit ? "bg-danger" : "bg-success")">
+                                            @t.TransactionType
+                                        </span>
+                                    </td>
+                                    <td class="text-end @(isDebit ? "amount-negative" : "amount-positive")">
+                                        @(isDebit ? "-" : "+")@t.Amount.ToString("N2", bg)
+                                    </td>
+                                    <td class="text-truncate" style="max-width: 380px;">@t.Description</td>
+                                    <td>@t.ReferenceNumber</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- LOANS + UPCOMING REPAYMENTS + CREDIT SCORE -->
+    <div class="row g-3 mt-2 align-items-stretch">
+        <!-- Loans (left) -->
+        <div class="col-12 col-lg-7 d-flex">
+            <div class="card shadow-sm flex-fill d-flex flex-column">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <strong>Loans</strong>
+                    <span class="text-muted small">@Model.Loans.Count loan(s)</span>
+                </div>
+
+                <div class="card-body p-0">
+                    @if (!Model.Loans.Any())
+                    {
+                        <div class="p-3 text-muted">You have no active loans.</div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm align-middle mb-0 w-100">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Type</th>
+                                        <th class="text-end">Approved</th>
+                                        <th>Status</th>
+                                        <th>Term</th>
+                                        <th>Approved on</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var l in Model.Loans)
+                                    {
+                                        <tr>
+                                            <td>@l.Type</td>
+                                            <td class="text-end">@l.ApprovedAmount.ToString("N2", bg)</td>
+                                            <td>
+                                                <span class="badge @(l.Status?.ToLower() == "approved" ? "bg-success" : l.Status?.ToLower() == "pending" ? "bg-warning text-dark" : "bg-secondary")">
+                                                    @l.Status
+                                                </span>
+                                            </td>
+                                            <td>@l.Term.ToString("dd.MM.yyyy")</td>
+                                            <td>@l.ApprovalDate.ToString("dd.MM.yyyy")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+
+                @* Credit score under Loans *@
+                @if (Model.Credit is not null)
+                {
+                    <div class="card-footer py-2">
+                        <strong>Credit score:</strong> @Model.Credit.CreditScore
+                        &nbsp;•&nbsp;<strong>Risk:</strong>
+                        <span class="badge @RiskBadgeClass(Model.Credit.RiskLevel)">
+                            @RiskLabel(Model.Credit.RiskLevel)
+                        </span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Upcoming repayments -->
+        <div class="col-12 col-lg-5 d-flex">
+            <div class="card shadow-sm flex-fill d-flex flex-column">
+                <div class="card-header">
+                    <strong>Upcoming repayments</strong>
+                </div>
+                <div class="card-body p-0">
+                    @if (!Model.UpcomingRepayments.Any())
+                    {
+                        <div class="p-3 text-muted">No scheduled repayments.</div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm align-middle mb-0 w-100">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Due</th>
+                                        <th class="text-end">Due amount</th>
+                                        <th class="text-end">Paid</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var r in Model.UpcomingRepayments)
+                                    {
+                                        <tr>
+                                            <td>@r.DueDate.ToString("dd.MM.yyyy")</td>
+                                            <td class="text-end">@r.AmountDue.ToString("N2", bg)</td>
+                                            <td class="text-end">@r.AmountPaid.ToString("N2", bg)</td>
+                                            <td>
+                                                <span class="badge @(r.Status?.ToLower() == "paid" ? "bg-success" : r.Status?.ToLower() == "overdue" ? "bg-danger" : "bg-secondary")">
+                                                    @r.Status
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
