@@ -40,7 +40,7 @@ namespace BankingManagmentApp.Areas.Identity.Pages.Account
         {
             _userManager = userManager;
             _userStore = userStore;
-            _emailStore = GetEmailStore();
+            //_emailStore = GetEmailStore();
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
@@ -101,26 +101,26 @@ namespace BankingManagmentApp.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                // Създайте обекта Consumers и попълнете всички свойства
+                
                 var user = new Customers
                 {
-                    UserName = Input.Email, // Имейлът е и потребителско име
+                    UserName = Input.Email,
                     Email = Input.Email,
                     FirstName = Input.FirstName,
                     LastName = Input.LastName,
                     Address = Input.Address,
                     PhoneNumber = Input.PhoneNumber,
-                    CreateAt = DateTime.Now // Присвоете текущата дата
+                    CreateAt = DateTime.Now 
                 };
 
-                // Използвайте _userManager.CreateAsync() за създаване на потребителя
+                
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    // Останалата част от кода
+                    
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -152,14 +152,13 @@ namespace BankingManagmentApp.Areas.Identity.Pages.Account
             return Page();
         }
 
-        // Този метод трябва да бъде премахнат, тъй като не е необходим
-        private IUserEmailStore<Customers> GetEmailStore()
-        {
-            if (!_userManager.SupportsUserEmail)
-            {
-                throw new NotSupportedException("The default UI requires a user store with email support.");
-            }
-            return (IUserEmailStore<Customers>)_userStore;
-        }
+        //private IUserEmailStore<Customers> GetEmailStore()
+        //{
+        //    if (!_userManager.SupportsUserEmail)
+        //    {
+        //        throw new NotSupportedException("The default UI requires a user store with email support.");
+        //    }
+        //    return (IUserEmailStore<Customers>)_userStore;
+        //}
     }
 }

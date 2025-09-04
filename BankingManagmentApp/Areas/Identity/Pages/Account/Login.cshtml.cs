@@ -78,12 +78,11 @@ namespace BankingManagmentApp.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                // Стъпка 1: Намерете потребителя по имейл
                 var user = await _userManager.FindByEmailAsync(Input.Email);
 
                 if (user != null)
                 {
-                    // Стъпка 2: Опитайте да се впишете, като използвате UserName на намерения потребител
+                   
                     var result = await _signInManager.PasswordSignInAsync(user.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
 
                     if (result.Succeeded)
@@ -102,7 +101,7 @@ namespace BankingManagmentApp.Areas.Identity.Pages.Account
                     }
                 }
 
-                // Ако потребителят не е намерен или паролата е грешна
+               
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return Page();
             }

@@ -18,9 +18,9 @@ namespace BankingManagmentApp.Services
                 var context = services.GetRequiredService<ApplicationDbContext>();
                 var userManager = services.GetRequiredService<UserManager<Customers>>();
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                //Sazdavane na roles
+                //Seed roles
                 await SeedRolesAsync(roleManager);
-                //sazdavane na SUPER ADMIN s vsi4kite mu roli
+                //create SUPER ADMIN 
                 await SeedSuperAdminAsync(userManager);
             }
             catch (Exception ex)
@@ -36,12 +36,12 @@ namespace BankingManagmentApp.Services
             //Seed Roles
             await roleManager.CreateAsync(new IdentityRole("Admin"));
             await roleManager.CreateAsync(new IdentityRole("User"));
-            //await roleManager.CreateAsync(new IdentityRole("Guest"));
+            
         }
 
         public static async Task SeedSuperAdminAsync(UserManager<Customers> userManager)
         {
-            //Seed Default User
+            //Seed Super Admin
             var defaultUser = new Customers
             {
                 UserName = "superadmin",
