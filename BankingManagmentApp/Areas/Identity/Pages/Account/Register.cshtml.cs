@@ -1,6 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
+﻿#nullable disable
 
 using System;
 using System.Collections.Generic;
@@ -157,14 +155,5 @@ namespace BankingManagmentApp.Areas.Identity.Pages.Account
 
             return Page();
         }
-
-        //private IUserEmailStore<Customers> GetEmailStore()
-        //{
-        //    if (!_userManager.SupportsUserEmail)
-        //    {
-        //        throw new NotSupportedException("The default UI requires a user store with email support.");
-        //    }
-        //    return (IUserEmailStore<Customers>)_userStore;
-        //}
     }
 }
