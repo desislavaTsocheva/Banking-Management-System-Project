@@ -1,4 +1,4 @@
-﻿@page
+﻿@* @page
 @model RegisterModel
 @{
     ViewData["Title"] = "Register";
@@ -83,6 +83,108 @@
                 }
             }
         </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+ *@
+
+@page
+@model RegisterModel
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Register";
+    var bg = CultureInfo.GetCultureInfo("bg-BG");
+}
+
+<div class="container-profile mt-5">
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+
+            <div class="card shadow-sm rounded-3 border-0" style="background: linear-gradient(135deg, #6a4bcf, #8e6dfd); color: white;">
+                <div class="card-header text-center rounded-top-3 py-4" style="background-color: rgba(0,0,0,0.1);">
+                    <h2>Create a new account</h2>
+                    <small>Fill in the form to register</small>
+                </div>
+
+                <div class="card-body p-5">
+                    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-light mb-4" role="alert"></div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="Input.Email" class="form-control form-control-lg" autocomplete="username" placeholder="Email" style="background-color: rgba(255,255,255,0.1); color: white; border: none;" />
+                            <label asp-for="Input.Email" class="text-light">Email</label>
+                            <span asp-validation-for="Input.Email" class="text-warning"></span>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="Input.FirstName" class="form-control form-control-lg" autocomplete="given-name" placeholder="First Name" style="background-color: rgba(255,255,255,0.1); color: white; border: none;" />
+                            <label asp-for="Input.FirstName" class="text-light">First Name</label>
+                            <span asp-validation-for="Input.FirstName" class="text-warning"></span>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="Input.LastName" class="form-control form-control-lg" autocomplete="family-name" placeholder="Last Name" style="background-color: rgba(255,255,255,0.1); color: white; border: none;" />
+                            <label asp-for="Input.LastName" class="text-light">Last Name</label>
+                            <span asp-validation-for="Input.LastName" class="text-warning"></span>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="Input.PhoneNumber" class="form-control form-control-lg" autocomplete="tel" placeholder="Phone Number" style="background-color: rgba(255,255,255,0.1); color: white; border: none;" />
+                            <label asp-for="Input.PhoneNumber" class="text-light">Phone Number</label>
+                            <span asp-validation-for="Input.PhoneNumber" class="text-warning"></span>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="Input.Address" class="form-control form-control-lg" autocomplete="street-address" placeholder="Address" style="background-color: rgba(255,255,255,0.1); color: white; border: none;" />
+                            <label asp-for="Input.Address" class="text-light">Address</label>
+                            <span asp-validation-for="Input.Address" class="text-warning"></span>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="Input.DateOfBirth" class="form-control form-control-lg" autocomplete="street-address" placeholder="Address" style="background-color: rgba(255,255,255,0.1); color: white; border: none;" />
+                            <label asp-for="Input.DateOfBirth" class="text-light">Date Of Birth</label>
+                            <span asp-validation-for="Input.DateOfBirth" class="text-warning"></span>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="Input.Password" class="form-control form-control-lg" autocomplete="new-password" placeholder="Password" style="background-color: rgba(255,255,255,0.1); color: white; border: none;" />
+                            <label asp-for="Input.Password" class="text-light">Password</label>
+                            <span asp-validation-for="Input.Password" class="text-warning"></span>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="Input.ConfirmPassword" class="form-control form-control-lg" autocomplete="new-password" placeholder="Confirm Password" style="background-color: rgba(255,255,255,0.1); color: white; border: none;" />
+                            <label asp-for="Input.ConfirmPassword" class="text-light">Confirm Password</label>
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-warning"></span>
+                        </div>
+
+                        <button id="registerSubmit" type="submit" class="btn btn-light w-100 btn-lg mb-3" style="color: #6a4bcf; font-weight: 500;">Register</button>
+
+                        @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+                        {
+                            <hr style="border-color: rgba(255,255,255,0.3);" />
+                            <p class="text-center small mb-3 text-light">Or register using</p>
+                            <div class="d-flex flex-column gap-2">
+                                @foreach (var provider in Model.ExternalLogins!)
+                                {
+                                    <form method="post" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
+                                        <button type="submit" class="btn btn-outline-light w-100 btn-lg" name="provider" value="@provider.Name">
+                                            @provider.DisplayName
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        }
+                    </form>
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
 

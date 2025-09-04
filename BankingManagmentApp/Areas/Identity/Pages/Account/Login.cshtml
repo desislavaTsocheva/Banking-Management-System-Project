@@ -1,4 +1,4 @@
-﻿@page
+﻿@* @page
 @model LoginModel
 
 @{
@@ -83,3 +83,83 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+ *@
+
+@page
+@model LoginModel
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Log in";
+    var bg = CultureInfo.GetCultureInfo("bg-BG");
+}
+
+<div class="container-profile mt-5">
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+
+            <div class="card shadow-sm rounded-3 border-0" style="background: linear-gradient(135deg, #6a4bcf, #8e6dfd); color: white;">
+                <div class="card-header text-center rounded-top-3 py-4" style="background-color: rgba(0,0,0,0.1);">
+                    <h2>Welcome Back!</h2>
+                    <small>Log in to access your account</small>
+                </div>
+
+                <div class="card-body p-5">
+                    <form id="account" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-light mb-4" role="alert"></div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="Input.Email" class="form-control form-control-lg" autocomplete="username" placeholder="name@example.com" style="background-color: background-color: rgba(255,255,255,0.1); color: white; border: none;" />
+                            <label asp-for="Input.Email" class="text-light">Email</label>
+                            <span asp-validation-for="Input.Email" class="text-warning"></span>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="Input.Password" class="form-control form-control-lg" autocomplete="current-password" placeholder="Password" style="background-color: rgba(255,255,255,0.1); color: white; border: none;" />
+                            <label asp-for="Input.Password" class="text-light">Password</label>
+                            <span asp-validation-for="Input.Password" class="text-warning"></span>
+                        </div>
+
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" asp-for="Input.RememberMe" />
+                            <label class="form-check-label text-light" asp-for="Input.RememberMe">
+                                @Html.DisplayNameFor(m => m.Input.RememberMe)
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-light w-100 btn-lg mb-3" style="font-weight: 500; color: #6a4bcf;">Log in</button>
+
+                        <div class="d-flex justify-content-between small mb-4 text-light">
+                            <a class="text-light" asp-page="./ForgotPassword">Forgot your password?</a>
+                            <a class="text-light" asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register</a>
+                        </div>
+
+                        @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+                        {
+                            <hr style="border-color: rgba(255,255,255,0.3);" />
+                            <p class="text-center small mb-3 text-light">Or log in with</p>
+                            <div class="d-flex flex-column gap-2">
+                                @foreach (var provider in Model.ExternalLogins!)
+                                {
+                                    <form method="post" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
+                                        <button type="submit" class="btn btn-outline-light w-100 btn-lg" name="provider" value="@provider.Name">
+                                            @provider.DisplayName
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        }
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+

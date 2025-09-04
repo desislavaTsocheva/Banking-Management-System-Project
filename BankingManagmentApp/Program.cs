@@ -3,6 +3,7 @@ using BankingManagmentApp.Data;
 using BankingManagmentApp.Models;
 using BankingManagmentApp.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,7 +42,8 @@ builder.Services.AddSession(options =>
 // DI
 builder.Services.AddScoped<ICreditScoringService, CreditScoringService>();
 // Ако EmailSender.cs го има и искаш да пращаш имейли, махни коментара на реда долу:
-// builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+
 
 var app = builder.Build();
 

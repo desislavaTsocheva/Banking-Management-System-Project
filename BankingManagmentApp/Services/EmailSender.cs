@@ -1,38 +1,27 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using System.Net;
-using System.Net.Mail;
+using MimeKit;
+using MailKit.Security;
+using System.Threading.Tasks;
 
-namespace BankingManagmentApp.Services
+public class EmailSender : IEmailSender
 {
-    //public class EmailSender : IEmailSender
-    //{
-    //    private readonly IConfiguration _config;
+    public async Task SendEmailAsync(string email, string subject, string htmlMessage)
+    {
+        var mimeMessage = new MimeMessage();
+        mimeMessage.From.Add(new MailboxAddress("SuperAdmin", "superadmin@gmail.com"));
+        mimeMessage.To.Add(MailboxAddress.Parse(email));
+        mimeMessage.Subject = subject;
 
-    //    public EmailSender(IConfiguration config)
-    //    {
-    //        _config = config;
-    //    }
+        mimeMessage.Body = new BodyBuilder { HtmlBody = htmlMessage }.ToMessageBody();
 
-    //    public async Task SendEmailAsync(string email, string subject, string htmlMessage)
-    //    {
-    //        using var client = new SmtpClient(_config["Smtp:Host"], int.Parse(_config["Smtp:Port"]))
-    //        {
-    //            Credentials = new NetworkCredential(_config["Smtp:Username"], _config["Smtp:Password"]),
-    //            EnableSsl = true
-    //        };
+        using var client = new SmtpClient();
+        await client.ConnectAsync("sandbox.smtp.mailtrap.io", 587, SecureSocketOptions.StartTls);
 
-    //        var mailMessage = new MailMessage
-    //        {
-    //            From = new MailAddress(_config["Smtp:From"]),
-    //            Subject = subject,
-    //            Body = htmlMessage,
-    //            IsBodyHtml = true
-    //        };
+        // Replace with your actual Mailtrap username & password
+        await client.AuthenticateAsync("a2315c47e7653e", "8da3ef272731be");
 
-    //        mailMessage.To.Add(email);
-    //        await client.SendMailAsync(mailMessage);
-    //    }
-    //}
+        await client.SendAsync(mimeMessage);
+        await client.DisconnectAsync(true);
+    }
 }
-

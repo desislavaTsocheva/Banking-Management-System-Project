@@ -75,6 +75,10 @@ namespace BankingManagmentApp.Areas.Identity.Pages.Account
             [Required]
             [Display(Name = "PhoneNumber")]
             public string PhoneNumber { get; set; }
+           
+            [Required]
+            [Display(Name = "DateOfBirth")]
+            public DateOnly DateOfBirth { get; set; }
 
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
@@ -101,7 +105,7 @@ namespace BankingManagmentApp.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                
+
                 var user = new Customers
                 {
                     UserName = Input.Email,
@@ -110,7 +114,9 @@ namespace BankingManagmentApp.Areas.Identity.Pages.Account
                     LastName = Input.LastName,
                     Address = Input.Address,
                     PhoneNumber = Input.PhoneNumber,
-                    CreateAt = DateTime.Now 
+                    CreateAt = DateTime.Now,
+                    DateOfBirth = Input.DateOfBirth,
+                    IsActive =true 
                 };
 
                 

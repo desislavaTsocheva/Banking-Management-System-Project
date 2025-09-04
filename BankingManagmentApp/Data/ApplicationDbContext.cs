@@ -13,6 +13,8 @@ namespace BankingManagmentApp.Data
         public DbSet<Loans> Loans { get; set; }
         public DbSet<LoanRepayments> LoanRepayments { get; set; }
         public DbSet<CreditAssessments> CreditAssessments { get; set; }
+        public DbSet<TemplateAnswer> TemplateAnswer { get; set; }
+        public DbSet<ChatHistory> ChatHistory { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

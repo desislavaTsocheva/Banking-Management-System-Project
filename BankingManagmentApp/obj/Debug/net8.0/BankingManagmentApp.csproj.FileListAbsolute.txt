@@ -592,3 +592,8 @@ C:\Users\viole\OneDrive\Работен плот\Banking-Management-System-Projec
 C:\Users\viole\OneDrive\Работен плот\Banking-Management-System-Project\BankingManagmentApp\obj\Debug\net8.0\BankingManagmentApp.genruntimeconfig.cache
 C:\Users\viole\OneDrive\Работен плот\Banking-Management-System-Project\BankingManagmentApp\obj\Debug\net8.0\ref\BankingManagmentApp.dll
 C:\Users\viole\OneDrive\Работен плот\Banking-Management-System-Project\BankingManagmentApp\bin\Debug\net8.0\QRCoder.dll
+C:\Users\viole\OneDrive\Работен плот\Banking-Management-System-Project\BankingManagmentApp\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+C:\Users\viole\OneDrive\Работен плот\Banking-Management-System-Project\BankingManagmentApp\bin\Debug\net8.0\MailKit.dll
+C:\Users\viole\OneDrive\Работен плот\Banking-Management-System-Project\BankingManagmentApp\bin\Debug\net8.0\MimeKit.dll
+C:\Users\viole\OneDrive\Работен плот\Banking-Management-System-Project\BankingManagmentApp\bin\Debug\net8.0\System.Security.Cryptography.Pkcs.dll
+C:\Users\viole\OneDrive\Работен плот\Banking-Management-System-Project\BankingManagmentApp\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll
