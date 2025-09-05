@@ -1,19 +1,17 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
-
+using BankingManagmentApp.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
+using QRCoder;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using BankingManagmentApp.Models;
+using static System.Collections.Specialized.BitVector32;
 
 namespace BankingManagmentApp.Areas.Identity.Pages.Account.Manage
 {
@@ -156,7 +154,8 @@ namespace BankingManagmentApp.Areas.Identity.Pages.Account.Manage
             SharedKey = FormatKey(unformattedKey);
 
             var email = await _userManager.GetEmailAsync(user);
-            AuthenticatorUri = GenerateQrCodeUri(email, unformattedKey);
+            var qrCodeUri = GenerateQrCodeUri(email, unformattedKey);
+            AuthenticatorUri = GenerateQrCodeImage(qrCodeUri);
         }
 
         private string FormatKey(string unformattedKey)
@@ -179,11 +178,20 @@ namespace BankingManagmentApp.Areas.Identity.Pages.Account.Manage
         private string GenerateQrCodeUri(string email, string unformattedKey)
         {
             return string.Format(
-                CultureInfo.InvariantCulture,
                 AuthenticatorUriFormat,
-                _urlEncoder.Encode("Microsoft.AspNetCore.Identity.UI"),
+                _urlEncoder.Encode("Razor Pages"),
                 _urlEncoder.Encode(email),
                 unformattedKey);
+        }
+
+
+        private string GenerateQrCodeImage(string qrCodeUri)
+        {
+            using var qrGenerator = new QRCodeGenerator();
+            using var qrCodeData = qrGenerator.CreateQrCode(qrCodeUri, QRCodeGenerator.ECCLevel.Q);
+            using var qrCode = new PngByteQRCode(qrCodeData);
+            var qrCodeBytes = qrCode.GetGraphic(20);
+            return Convert.ToBase64String(qrCodeBytes);
         }
     }
 }
