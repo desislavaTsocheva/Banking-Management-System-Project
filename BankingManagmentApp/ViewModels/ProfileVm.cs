@@ -13,6 +13,10 @@ namespace BankingManagmentApp.ViewModels
         public List<Loans> Loans { get; set; } = new();
         public List<LoanRepayments> UpcomingRepayments { get; set; } = new();
 
+        public List<Transactions> TransactionType { get; set; } = new();
+        public List<string> AvailableTransactionTypes { get; set; } = new();
+
+
         public CreditAssessments? Credit { get; set; }
     }
 }

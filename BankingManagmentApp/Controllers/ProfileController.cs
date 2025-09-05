@@ -1,17 +1,19 @@
-// Controllers/ProfileController.cs
+using BankingManagmentApp.Data;
+using BankingManagmentApp.Models;
+using BankingManagmentApp.Services;
+using BankingManagmentApp.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
+using Org.BouncyCastle.Utilities;
 using System;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BankingManagmentApp.Data;
-using BankingManagmentApp.Models;
-using BankingManagmentApp.ViewModels;
-using BankingManagmentApp.Services;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BankingManagmentApp.Controllers
 {
@@ -75,7 +77,11 @@ namespace BankingManagmentApp.Controllers
                     Notes = computed.Notes
                 };
             }
-
+            var availableTypes = await _db.Transactions
+       .Where(t => t.Accounts != null && t.Accounts.CustomerId == user.Id)
+       .Select(t => t.TransactionType)
+       .Distinct()
+       .ToListAsync();
             var vm = new ProfileVm
             {
                 User = user,
@@ -83,7 +89,8 @@ namespace BankingManagmentApp.Controllers
                 LastTransactions = lastTx,
                 Loans = loans,
                 UpcomingRepayments = upcomingRepayments,
-                Credit = credit
+                Credit = credit,
+                AvailableTransactionTypes = availableTypes
             };
 
             return View(vm);
@@ -209,6 +216,55 @@ namespace BankingManagmentApp.Controllers
             fname += $"_{DateTime.UtcNow:yyyyMMdd_HHmmss}.csv";
 
             return File(bytes, "text/csv", fname);
+        }
+
+        public async Task<IActionResult> TransactionType(int? accountId, DateTime? from, DateTime? to, string type)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Challenge();
+
+            var query = _db.Transactions
+                .Include(t => t.Accounts)
+                .Where(t => t.Accounts != null && t.Accounts.CustomerId == user.Id)
+                .AsQueryable();
+
+            if (accountId.HasValue)
+            {
+                var belongs = await _db.Accounts.AnyAsync(a => a.Id == accountId.Value &&
+                                                               a.CustomerId == user.Id);
+                if (!belongs) return Forbid();
+                query = query.Where(t => t.AccountsId == accountId.Value);
+            }
+
+            DateOnly? fromD = from.HasValue ? DateOnly.FromDateTime(from.Value.Date) : null;
+            DateOnly? toD = to.HasValue ? DateOnly.FromDateTime(to.Value.Date) : null;
+
+            if (fromD.HasValue) query = query.Where(t => t.Date >= fromD.Value);
+            if (toD.HasValue) query = query.Where(t => t.Date <= toD.Value);
+
+            var list = await query
+                .OrderBy(t => t.Date)
+                .ThenBy(t => t.Id)
+                .Where(t => t.TransactionType == type)
+                .ToListAsync();
+
+            var availableTypes = await _db.Transactions
+                .Where(t => t.Accounts != null && t.Accounts.CustomerId == user.Id)
+                .Select(t => t.TransactionType)
+                .Distinct()
+                .ToListAsync();
+
+            var vm = new ProfileVm
+            {
+                Accounts = await _db.Accounts.Where(a => a.CustomerId == user.Id).ToListAsync(),
+                LastTransactions = await _db.Transactions.Where(t => t.Accounts.CustomerId == user.Id).OrderByDescending(t => t.Id).Take(10).ToListAsync(),
+                Loans = await _db.Loans.Where(l => l.CustomerId == user.Id).ToListAsync(),
+                UpcomingRepayments = await _db.LoanRepayments.Where(r => r.Loan.CustomerId == user.Id).OrderBy(r => r.DueDate).Take(5).ToListAsync(),
+                User = user,
+                TransactionType = list,
+                AvailableTransactionTypes = availableTypes
+            };
+            return View("Index", vm);
         }
     }
 }
