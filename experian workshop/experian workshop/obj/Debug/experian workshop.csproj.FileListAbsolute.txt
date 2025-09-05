@@ -1,0 +1,2 @@
+C:\Users\User\source\repos\задачи практикум\experian workshop\experian workshop\obj\Debug\experian workshop.csproj.AssemblyReference.cache
+C:\Users\User\source\repos\задачи практикум\experian workshop\experian workshop\obj\Debug\experian workshop.csproj.CoreCompileInputs.cache
