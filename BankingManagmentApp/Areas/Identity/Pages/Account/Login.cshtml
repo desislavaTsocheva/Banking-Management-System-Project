@@ -1,11 +1,9 @@
-﻿
-@page
-@model LoginModel
+﻿@page
+@model BankingManagmentApp.Areas.Identity.Pages.Account.LoginModel
 @using System.Globalization
 
 @{
     ViewData["Title"] = "Log in";
-    var bg = CultureInfo.GetCultureInfo("bg-BG");
 }
 
 <div class="container-profile mt-5">
@@ -21,10 +19,10 @@
 
                 <div class="card-body p-5">
                     <form id="account" method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-light mb-4" role="alert"></div>
+                        <div asp-validation-summary="All" class="text-light mb-4" role="alert"></div>
 
                         <div class="form-floating mb-4">
-                            <input asp-for="Input.Email" class="form-control form-control-lg" autocomplete="username" placeholder="name@example.com" style="background-color: background-color: rgba(255,255,255,0.1); color: white; border: none;" />
+                            <input asp-for="Input.Email" class="form-control form-control-lg" autocomplete="username" placeholder="name@example.com" style="background-color: rgba(255,255,255,0.1); color: white; border: none;" />
                             <label asp-for="Input.Email" class="text-light">Email</label>
                             <span asp-validation-for="Input.Email" class="text-warning"></span>
                         </div>
@@ -36,7 +34,7 @@
                         </div>
 
                         <div class="mb-4">
-                            <img src="/Account/CaptchaImage" alt="CAPTCHA" class="d-block mb-2" />
+                            <img src="/Account/CaptchaImage" alt="CAPTCHA" />
                             <div class="form-floating">
                                 <input asp-for="Input.CaptchaInput" class="form-control form-control-lg" placeholder="Enter CAPTCHA" style="background-color: rgba(255,255,255,0.1); color: white; border: none;" />
                                 <label asp-for="Input.CaptchaInput" class="text-light">Въведете кода от картинката</label>
@@ -44,14 +42,12 @@
                             </div>
                         </div>
 
-
                         <div class="form-check mb-4">
                             <input class="form-check-input" asp-for="Input.RememberMe" />
                             <label class="form-check-label text-light" asp-for="Input.RememberMe">
                                 @Html.DisplayNameFor(m => m.Input.RememberMe)
                             </label>
                         </div>
-
 
                         <button type="submit" class="btn btn-light w-100 btn-lg mb-3" style="font-weight: 500; color: #6a4bcf;">Log in</button>
 
@@ -86,5 +82,3 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
-
-
